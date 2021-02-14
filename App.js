@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View,ScrollView } from 'react-native';
 import AlbumCards from './scr/components/albumCard';
 import albumsInfo from './scr/api/api'
-import numero from "./utils/utils"
+//import numero from "./utils/utils"
 
 export default function App() {
 
@@ -13,16 +13,48 @@ export default function App() {
   const getalbums= async()=>{
     const am= await albumsInfo();
 
-    setAlbum(am);
-    setcnt(numero(alBm));
-    console.log(cnt[0]);
+   setAlbum(am);
+    setcnt(numero(am))
   }
   
 
   useEffect(()=>{
     getalbums();
-
   },[])
+  
+  const numero=(data)=>{
+    
+    const n=[];
+    const imgrl=[]; 
+    let i=0;
+    let a=1;
+    while(n.length<3){
+        if(n.length==0){
+            n.push(data[data.length-1].albumId)
+            imgrl.push(data[data.length-1].url)
+            imgrl.push(data[data.length-2].url)
+        }
+        if(n[i]===data[data.length-a].albumId){
+            a++;
+        }else{
+            i++;
+            n.push(data[data.length-a].albumId)
+            imgrl.push(data[data.length-a].url)
+            imgrl.push(data[data.length-a-1].url)
+            a++;
+        }
+    }
+    const datac=[];
+    datac.push(n);
+    datac.push(imgrl);
+    return datac;
+
+}
+
+
+
+
+
 if(!alBm){
   return(
     <View style={styles.container}>
@@ -38,11 +70,12 @@ if(!alBm){
                       />
       <ScrollView style={styles.scroll}>
       <AlbumCards
-       id={cnt[0]}/>
+       id={cnt[0][0]}
+    />
       <AlbumCards
-      id={cnt[1]}/>
+      id={cnt[0][1]}/>
       <AlbumCards
-      id={cnt[2]}/>
+      id={cnt[0][2]}/>
       </ScrollView>
       
      
